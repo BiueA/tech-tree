@@ -49,8 +49,6 @@ redis-cli -h redis-server_ip -p port
 
 
 
-
-
 ##### 变量操作
 
 set  key  value
