@@ -1,0 +1,87 @@
+--debian 9 
+--mariadb 10.4
+
+
+--安装 mariadb
+sudo apt-get install software-properties-common dirmngr
+sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
+sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mirrors.tuna.tsinghua.edu.cn/mariadb/repo/10.4/debian stretch main'
+sudo apt-get update
+sudo apt-get install mariadb-server
+
+
+
+--授权
+GRANT ALL PRIVILEGES ON *.* TO '用户名'@'%' IDENTIFIED BY 'root' WITH GRANT OPTION;
+flush privileges;
+
+--delete from user where host='localhost' and user='root'
+
+
+ssh 127.0.0.1 -p 60022
+
+
+
+--修改 mariadb 编码
+.1 复制配置文件
+sudo cp -p /etc/mysql/mariadb.cnf /etc/mysql/conf.d/mariadb.cnf
+
+.2 修改 /etc/mysql/conf.d/mariadb.cnf
+sudo vi /etc/mysql/conf.d/mariadb.cnf
+修改文件中的 utf8 为 utf8mb4 ; 并取消注释 (#)
+
+
+-- 修改 mariadb 默认编码, 重启服务会失效的; 临时修改
+set character_set_client      = utf8mb4         ;
+set character_set_connection  = utf8mb4         ;
+set character_set_database    = utf8mb4         ;
+set character_set_results     = utf8mb4         ;
+set character_set_server      = utf8mb4         ;
+
+
+
+--查看编码
+
+修改前: 
+
+MariaDB [(none)]> show variables like '%char%';
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | utf8                       |
+| character_set_connection | utf8                       |
+| character_set_database   | latin1                     |
+| character_set_filesystem | binary                     |
+| character_set_results    | utf8                       |
+| character_set_server     | latin1                     |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+
+
+修改后:
+
+MariaDB [(none)]> show variables like '%char%';
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | utf8mb4                    |
+| character_set_connection | utf8mb4                    |
+| character_set_database   | utf8mb4                    |
+| character_set_filesystem | binary                     |
+| character_set_results    | utf8mb4                    |
+| character_set_server     | utf8mb4                    |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+
+
+MariaDB [(none)]> show variables like '%collation%';
++----------------------+--------------------+
+| Variable_name        | Value              |
++----------------------+--------------------+
+| collation_connection | utf8mb4_general_ci |
+| collation_database   | utf8mb4_general_ci |
+| collation_server     | utf8mb4_general_ci |
++----------------------+--------------------+
+
