@@ -9,6 +9,8 @@ set relativenumber
 
 "" show button status
 set ruler
+"" show command key
+"set showcmd
 
 "" tap -> 4 spaces
 set tabstop=4
@@ -25,7 +27,7 @@ syntax on
 "" file encoding
 set fileencodings=utf-8,cp936
 set fileencoding=utf-8
-"set encoding=utf-8
+set encoding=utf-8
 "set termencoding=utf-8
 
 "" highlight search result
@@ -37,7 +39,7 @@ set incsearch
 set autoread
 
 "" auto scroll
-set scrolloff=2
+set scrolloff=5
 
 colorscheme default
 
@@ -52,12 +54,12 @@ colorscheme default
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "" Quickly Run
-map <F5> :w<CR> :call CompileRunCode()<CR>
+map ,,r :w<CR> :call CompileRunCode()<CR>
 func! CompileRunCode()
     "exec 'w'
     if &filetype == 'python'
-        " exec '! python %'
-        exec '! /home/b1uea/environment/pyvenv/bin/python %'
+        exec '! python %'
+        "exec '! /home/b1uea/environment/pyvenv/bin/python %'
     elseif &filetype == 'c'
         exec '!clang % -o %:r'
         exec '! %:r'
@@ -68,15 +70,30 @@ endfunc
 
 
 "" key map
-"""" map the ctrl+w [hjkl] to ,[hjkl] ; change windows
+"""" map the ctrl+w [hjkl] to ,[hjkl] ; change window
 nnoremap ,h <C-W>h 
 nnoremap ,j <C-W>j
 nnoremap ,k <C-W>k 
 nnoremap ,l <C-W>l 
 
+"""" map the g[tT] to ,[tT] ; change tab
+""""""" next tab
+nnoremap ,t gt
+""""""" previous tab
+nnoremap ,T gT
+
+
+
 """" enable code folding with the space rather than za
 "nnoremap <space> za
 
+"""" copy (or cut) to system clipboard
+"""""" cut
+"nnoremap ,x  "+x
+"""""" copy
+"nnoremap ,c  "+y
+"""""" paste (put after)
+nnoremap ,v  "+gP
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -96,8 +113,7 @@ if has("gui_running")
     "colorscheme evening
     "colorscheme desert
     "colorscheme blue
-    "colorscheme darkblue
-
+    colorscheme darkblue
     
     "" highlight the cursor line
     set cursorline
@@ -113,7 +129,7 @@ if has("gui_running")
         " gui font and font size
         set guifont=Sarasa\ Term\ SC:h15
     else
-        set guifont=DejaVu\ Sans\ Mono\ 15
+        set guifont=DejaVu\ Sans\ Mono\ 16
     endif
 endif
 
@@ -135,12 +151,12 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-surround'
     "" formate code
     Plug 'chiel92/vim-autoformat'
-    
-    "" syntax check
-    "Plug 'w0rp/ale'
-    "Plug 'valloric/youcompleteme'
     "" autocomplete 
-    "Plug 'davidhalter/jedi-vim'
+    Plug 'davidhalter/jedi-vim'
+    "" syntax check
+    Plug 'w0rp/ale'
+    
+    "Plug 'valloric/youcompleteme'
     "" display-pane
     "Plug 't9md/vim-choosewin'
 call plug#end()
@@ -159,8 +175,10 @@ map ,n :NERDTreeToggle<CR>
 ""
 ""   1.2 open nerdtree automatically when vim start up if no files where specified
 ""
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+if has("gui_running")
+    autocmd StdinReadPre * let s:std_in=1
+    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+endif
 ""
 "" 1.3 open nerdtree automatically when vim start up on opening a directory
 ""
@@ -179,15 +197,29 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 ""  2. gruvbox
 ""
 if has("gui_running")
+    set bg=dark
     colorscheme gruvbox
-    let g:gruvbox_contrast_dark='soft'  
+    let g:gruvbox_contrast_dark='hard'  
+    "let g:gruvbox_contrast_dark='soft'  
 endif
 
 ""  3. ale
 ""
 ""    3.1
+""
 "let g:ale_linters = {
-"\   'python':['pylint']
+"\   'python':['autopep8']
 "\}
+""
+""    3.2 fix
+""
+let g:ale_fixers = {
+\   'python':['autopep8']
+\}
+""
+""    3.2 fix fiel when save the file
+""
+let g:ale_fix_on_save = 1
 
-
+"" 4. vim-autoformat
+let g:formatter_yapf_style = 'pep8'
