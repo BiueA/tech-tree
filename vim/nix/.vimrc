@@ -54,7 +54,7 @@ colorscheme default
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "" Quickly Run
-map ,,r :w<CR> :call CompileRunCode()<CR>
+map ,,r :w<CR> :call CompileRunCode() <CR>
 func! CompileRunCode()
     "exec 'w'
     if &filetype == 'python'
@@ -76,24 +76,42 @@ nnoremap ,j <C-W>j
 nnoremap ,k <C-W>k 
 nnoremap ,l <C-W>l 
 
-"""" map the g[tT] to ,[tT] ; change tab
+"""" map the ctrl+w [HJKL] to ,[HJKL] ; move window
+nnoremap ,H <C-W>H 
+nnoremap ,J <C-W>J
+nnoremap ,K <C-W>K 
+nnoremap ,L <C-W>L 
+
+
+"""" map the g[tT] to ,t[T] ; change tab
 """"""" next tab
-nnoremap ,t gt
+"nnoremap ,tn gt
+noremap <C-tab> :tabnext<CR>
+inoremap <C-tab> <ESC>:tabnext<CR>
 """"""" previous tab
-nnoremap ,T gT
+"nnoremap ,tp gT
+noremap <C-S-tab> :tabprev<CR>
+inoremap <C-S-tab> <ESC>:tabprev<CR>
+""""""" new tab
+noremap ,tt :tabnew<cr>
+""""""" close tab
+noremap ,tc :tabclose<cr>
+"
+"noremap ,we :Vexplore<CR>:vertical resize 30<CR>
 
-
-
-"""" enable code folding with the space rather than za
-"nnoremap <space> za
+"""" enable code folding with the ,<space> rather than zc
+noremap ,<space> zc
+noremap <space> zo
 
 """" copy (or cut) to system clipboard
 """""" cut
 "nnoremap ,x  "+x
 """""" copy
-"nnoremap ,c  "+y
-"""""" paste (put after)
+noremap ,c  "+y
+"""""" paste (put befote)
 nnoremap ,v  "+gP
+"""""" paste (put after)
+nnoremap ,V  "+gp
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -114,7 +132,7 @@ if has("gui_running")
     "colorscheme desert
     "colorscheme blue
     colorscheme darkblue
-    
+
     "" highlight the cursor line
     set cursorline
     
@@ -180,46 +198,54 @@ if has("gui_running")
     autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 endif
 ""
-"" 1.3 open nerdtree automatically when vim start up on opening a directory
+""   1.3 open nerdtree automatically when vim start up on opening a directory
 ""
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 ""
-""    1.4 close vim if the only window left open is a NERDTree
+""   1.4 close vim if the only window left open is a NERDTree
 ""
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 ""
-""    1.5 change default arrows
+""   1.5 change default arrows
 ""
 "let g:NERDTreeDirArrowExpandable = '>' 
 "let g:NERDTreeDirArrowCollapsible = '-'
 
-""  2. gruvbox
+"" 2. gruvbox
 ""
 if has("gui_running")
     set bg=dark
     colorscheme gruvbox
-    let g:gruvbox_contrast_dark='hard'  
-    "let g:gruvbox_contrast_dark='soft'  
+    "let g:gruvbox_contrast_dark='hard'  
+    let g:gruvbox_contrast_dark='soft'  
 endif
 
-""  3. ale
+"" 3. ale
 ""
-""    3.1
+""   3.1
 ""
 "let g:ale_linters = {
 "\   'python':['autopep8']
 "\}
 ""
-""    3.2 fix
+""   3.2 fix
 ""
 let g:ale_fixers = {
 \   'python':['autopep8']
 \}
 ""
-""    3.2 fix fiel when save the file
+""   3.2 fix fiel when save the file
 ""
 let g:ale_fix_on_save = 1
 
 "" 4. vim-autoformat
 let g:formatter_yapf_style = 'pep8'
+
+"" 5. jedi
+""
+""   5.1
+""
+let g:jedi#use_tabs_not_buffers = 1
+"let g:jedi#force_py_version = 3.7
+
