@@ -1,0 +1,45 @@
+set scrolloff=5
+
+set number
+set relativenumber
+
+"" key map
+"""" map the ctrl+w [hjkl] to ,[hjkl] ; change window
+nnoremap ,h <C-W>h 
+nnoremap ,j <C-W>j
+nnoremap ,k <C-W>k 
+nnoremap ,l <C-W>l 
+
+"""" map the ctrl+w [HJKL] to ,[HJKL] ; move window
+nnoremap ,H <C-W>H 
+nnoremap ,J <C-W>J
+nnoremap ,K <C-W>K 
+nnoremap ,L <C-W>L 
+
+"""" map the g[tT] to ctrl+[tab/shift+tab] ; change tab
+""""""" next tab
+noremap <C-tab> :tabnext<CR>
+"inoremap <C-tab> <ESC>:tabnext<CR>
+""""""" previous tab
+noremap <C-S-tab> :tabprev<CR>
+"inoremap <C-S-tab> <ESC>:tabprev<CR>
+""""""" new tab
+noremap ,tt :tabnew<cr>
+""""""" close tab
+noremap ,tc :tabclose<cr>
+"
+"noremap ,we :Vexplore<CR>:vertical resize 30<CR>
+
+"""" enable code folding with the space rather than za
+noremap ,<space> zc
+noremap <space> zo
+
+"""" copy (or cut) to system clipboard
+"""""" cut
+"nnoremap ,x  "+x
+"""""" copy
+noremap ,c  "+y
+"""""" paste (put befote)
+nnoremap ,v  "+gP
+"""""" paste (put after)
+nnoremap ,V  "+gp
