@@ -1,0 +1,13 @@
+patch:
+  style:
+    text_orientation: vertical # horizontal | vertical 
+  menu:
+    page_size: 7
+  switcher:
+    hotkeys:
+      - F4
+  schema_list:
+    - schema: double_pinyin
+    - schema: luna_pinyin
+    - schema: luna_pinyin_simp
+    - schema: luna_pinyin_fluency

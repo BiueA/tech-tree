@@ -1,0 +1,371 @@
+## change mirrors to china
+sudo pacman-mirrors -i -c China -m rank
+
+## 更新镜像
+sudo pacman -Syy
+## 更新镜像并升级
+sudo pacman -Syyu
+## 更新密钥链
+sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
+
+## 双系统时间同步
+timedatectl set-local-rtc true
+
+## 添加archlinuxcn
+sudo nano /etc/pacman.conf 
+## add below to /etc/pacman.conf
+[archlinuxcn]
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
+
+## 安装输入法
+sudo pacman -S ibus-rime 
+## https://github.com/rime/rime-double-pinyin
+double_pinyin.schema.yaml 下载自然码双拼方案
+##~/.config/ibus/rime/build
+
+## 安装gvim
+sudo pacman -S gvim
+## 安装 vim-plug插件
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+## 从github上下载vim配置文件
+
+
+sudo pacman -S pycharm-community-edition intellij-idea-community-edition visual-studio-code-bin octave codeblocks
+sudo pacman -S alacritty redis-desktop-manager
+sudo pacman -S thunderbird netease-cloud-music telegram-desktop goldendict qbittorrent inkscape
+### 安装 wps 及 依赖字体
+sudo pacman -S wps-office ttf-wps-fonts
+#sudo pacman -S shadowsocks-qt5 electron-ssr
+#sudo pacman -S mendeleydesktop
+
+## android 投屏软件
+sudo  pacman -S scrcpy
+
+## 安装virtualbox
+pamac install virtualbox $(pacman -Qsq "^linux" | grep "^linux[0-9]*[-rt]*$" | awk '{print $1"-virtualbox-host-modules"}' ORS=' ') 
+## 打开virtualbox
+sudo vboxreload
+## 安装扩展
+pamac build virtualbox-ext-oracle
+
+
+##sudo pacman -S anaconda    
+## source /opt/anaconda/bin/activate root
+## source /opt/anaconda/bin/deactivate root
+## .bash_aliases
+###alias condaRoot='source /opt/anaconda/bin/activate root'
+###alias condaAn='source /opt/anaconda/bin/activate root && anaconda-navigator && conda deactivate'
+###alias condaDeactive='conda deactivate'
+
+## 安装 wechat
+pamac build deepin-wine-wechat # 微信
+pamac build deepin-wine-tim    # qq
+
+## 微信不能输入中文 wine降级至 4.15.1(4.17和4.18不能用)
+##sudo pacman --noconfirm -U /var/cache/pacman/pkg/wine-4.15-1-x86_64.pkg.tar.xz
+
+解决微信不能发送文件的问题 deepin-wine5
+方法一
+1.安装deeping-wine5
+2.从arch 上下载 deepin-wine-wechat 的 snapthot 包,解压修改PKGBUILD 文件中的 dependenies 里面 wine 为 deepin-wine5 , make -s 生成 安装包 再安装
+
+方法二
+1.如果你已经安装了 deepin-wine-wechat 最新版本了, 也安装了 deepin-wine5 了,直接修改vim /opt/deepinwine/apps/Deepin-WeChat/run.sh 里面的 WINE_CMD 为 deepin-wine5；这里面有个坑, 修改完了 deepin-wine5 后, 需要把 所有 winesever 的后台进程都干掉, 重启微信 才能使用 deepin-wine5 启动.
+
+
+## 微信和tim路径
+## /opt/deepin
+
+## anaconda 升级
+#conda update -n base -c defaults conda
+## alacrity 添加一下环境变量可以防止 系统环境变量失效
+#export TERMINFO=/usr/lib/terminfo
+-----------------------------------------------manjaro swapfile-----------------------------------------------
+1. Creating and Enabling a Static Swapfile
+
+<1. First create and intialize the file to hold the swap. For example, to create a 4GB swapfile, you could use the command:
+
+sudo fallocate -l 4G /swapfile
+sudo mkswap /swapfile
+
+<2. Set the appropriate permissions on the file. It should be readable and writable only by root. This can be done with the command:
+
+sudo chmod u=rw,go= /swapfile
+
+<3.Next we need to enable the swapfile with the swapon command. Following our example above this could be done with:
+
+sudo swapon /swapfile
+
+<4. In order to ensure that the swap is enabled at boot we can add an entry to /etc/fstab. You can add the line to ftab manually or using the command:
+
+sudo bash -c "echo /swapfile none swap defaults 0 0 >> /etc/fstab"
+
+
+2. Remove Other Swap
+
+<1. To display your current swap devices you can use the command swapon. For example, my test machine displays the following:
+
+swapon
+NAME      TYPE      SIZE USED PRIO
+/swapfile file        4G   0B   -2
+/dev/sda3 partition 8.4G   0B   -3
+
+<2. In this example there are two swap devices. A swapfile and a swap partition. To turn them off we can use the command swapoff.
+
+sudo swapoff /swapfile
+sudo swapoff /dev/sda3
+
+<3. Next we need to remove them. The swap partition will need to be deleted using your favorite partitioning tool. You can remove the swapfile by simply deleting it.
+
+sudo rm /swapfile
+
+<4. We need to also remove any lines related to swap from /etc/fstab. Edit the file with an appropriate text editor and remove or comment out the lines for the swap space. In the example above, we would remove these lines:
+
+UUID=c2430cf1-8ea9-4422-a5c5-5a38779194c3 swap           swap    defaults,noatime 0 2
+/swapfile none swap defaults 0 0
+
+<5. Next reboot. After the reboot you should see something similiar to the following when running swapon
+
+NAME                           TYPE SIZE USED PRIO
+
+
+-----------------------------------------------vim shortcut-------------------------------------------------
+ctrl + ]    goto method define
+ctrl + t    goto method call
+ctrl + o    previous location
+
+replace string
+ type  :s/old/new <ENTER>    replace old by new first match
+ type  :s/old/new/g          replace old by new in line
+ type  :%s/old/new/g         replace old by new in file
+ type  :#,#s/old/new/g       replace old by new bewteen #,#
+ type  :%s/old/new/gc        to find every occurrence in the whole file, 
+                              with a prompt whether to substitute or not.  
+
+page
+ ctrl + d    scroll down half page
+ ctrl + u    scroll up half page
+ ctrl + f    scroll down page
+ ctrl + b    scroll up page
+
+ ctrl + e    scroll up a line but not move cursor
+ ctrl + y    scroll down a line but not move cursor
+
+
+fold
+ type  zc       fold current line
+ type  zo       open folded line
+
+-----------------------------------------------theme--------------------------------------------------------
+## Themes:
+##    applications:   Matcha-sea
+##    cursor:         Xcursor-breeze
+##    Icons:          Papirus-Dark-Maia
+##    Shell:          Copernico-theme #Matcha-sea
+##
+## pamac install gtk-theme-arc-git
+## 顶栏样式
+pamac install gnome-shell-theme-copernico-git
+
+## gnome 添加新图标
+## 系统层面
+## 在 /usr/share/applications/ 中添加新 .desktop 文件
+## 用户层面
+## ~/.local/share/applications
+
+-----------------------------------------------pacman--------------------------------------------------------
+sudo pacman-mirrors -i -c China -m rank
+## 删除软件及依赖
+sudo pacman -Rsu 包名
+## 删除孤儿
+sudo pacman -Rs $(pacman -Qdtq)
+## 查询孤儿
+pacman -Qdtq
+
+## 包详细信息
+pacman -Si package-name
+## 查询包
+pacman -Ss package-name
+## 安装
+sudo pacman -S package-name
+-------------------------------------------------清理--------------------------------------------------------
+## 清理pacman 包缓存，保留最近3个版本
+paccache -rvk 3
+## 保留30天系统日志
+journalctl --vacuum-time=30days
+-------------------------------------------------显卡--------------------------------------------------------
+#bumblebeed --version
+#optirun
+#
+### 用 Optimus 打开 NVIDIA 设置面板:
+#sudo optirun -b none nvidia-settings -c :8
+#sudo optirun -b none alacritty
+#
+#optirun -b none alacritty
+#
+### 添加用户到bumblebee组
+#sudo gpasswd -a b1uea bumblebee
+prime-run [command]
+
+-------------------------------------mount-------------------------------------------
+## 查看硬盘
+sudo fdisk -l
+## 挂载
+sudo mount /dev/sdb /mnt/usb/
+## 卸载
+sudo umount /mnt/usb/
+
+--开启 trim
+sudo systemctl status fstrim.timer
+
+-----------------------------------ssh 密钥登录------------------------------------
+## 生成密钥
+ssh-keygen 
+## 复制公钥到服务器
+ssh-copy-id -i ~/.ssh/id_rsa.pub biued@192.168.43.60
+## 登录
+ssh biued@192.168.43.60
+
+
+-----------------------------------git---------------------------------------------
+git clone url
+
+## 查看所有仓库
+git branch -a
+git branch -va
+## 查看分支追踪情况
+git branch -vv
+git branch -vva
+
+## 设置追踪
+git branch --set-upstream-to=origin/<branch> local_branch
+
+## 检出远程分支
+git checkout -b local_branch_name origin/<branch>
+## 检出的本地分支和远程分支名字一样
+git checkout -t origin/<branch>
+
+## 查看那些commit没有push
+git cherry 
+
+## 查看commit中有那些文件修改
+git log -3 --stat
+
+
+=========================================================================================
+=                                  database 
+=========================================================================================
+
+-----------------------------------mariadb-----------------------------------------
+sudo mysql -uroot -p
+mysql -ub1 -pb1
+mysql -ulifan -plifan
+nat: 10.0.2.4
+host-only: 192.18.56.101
+
+-----------------------------------postgresql--------------------------------------
+
+#创建数据库用户 dbuser
+sudo -u postgres createuser --superuser dbuser
+#登录数据库
+sudo -u postgres psql
+#修改用户密码
+\password dbuser
+#为用户dbuser创建数据dbuserdb 
+sudo -u postgres createdb -O dbuser dbuserdb
+#连接数据库
+psql -U dbuser -d exampledb -h 127.0.0.1 -p 5432
+# virtualBox 
+postgres/postgres/postgresdb
+b1/b1/b1
+
+
+=========================================================================================
+=                                   java related
+=========================================================================================
+
+--------------------------------------netbeans------------------------------------
+netbeans 本地配置
+/home/b1uea/.netbeans/11.3/etc/netbeans.conf
+
+netbeans_default_userdir="${DEFAULT_USERDIR_ROOT}/11.3"
+netbeans_default_cachedir="${DEFAULT_CACHEDIR_ROOT}/11.3"
+
+## set fontsize
+netbeans_default_options="${netbeans_default_options} --fontsize 18"
+## set jdk
+netbeans_jdkhome="/home/b1uea/environment/zulu11.33.15-ca-fx-jdk11.0.4-linux_x64/"
+
+
+---------------------------------------java----------------------------------------
+jstat -gc pid inteval
+
+    S0C：年轻代中第一个survivor（幸存区）的容量 (字节) 
+    S1C：年轻代中第二个survivor（幸存区）的容量 (字节) 
+    S0U：年轻代中第一个survivor（幸存区）目前已使用空间 (字节) 
+    S1U：年轻代中第二个survivor（幸存区）目前已使用空间 (字节) 
+    EC：年轻代中Eden（伊甸园）的容量 (字节) 
+    EU：年轻代中Eden（伊甸园）目前已使用空间 (字节) 
+    OC：Old代的容量 (字节) 
+    OU：Old代目前已使用空间 (字节) 
+    PC：Perm(持久代)的容量 (字节) 
+    PU：Perm(持久代)目前已使用空间 (字节) 
+    YGC：从应用程序启动到采样时年轻代中gc次数 
+    YGCT：从应用程序启动到采样时年轻代中gc所用时间(s) 
+    FGC：从应用程序启动到采样时old代(全gc)gc次数 
+    FGCT：从应用程序启动到采样时old代(全gc)gc所用时间(s) 
+    GCT：从应用程序启动到采样时gc用的总时间(s) 
+    NGCMN：年轻代(young)中初始化(最小)的大小 (字节) 
+    NGCMX：年轻代(young)的最大容量 (字节) 
+    NGC：年轻代(young)中当前的容量 (字节) 
+    OGCMN：old代中初始化(最小)的大小 (字节) 
+    OGCMX：old代的最大容量 (字节) 
+    OGC：old代当前新生成的容量 (字节) 
+    PGCMN：perm代中初始化(最小)的大小 (字节) 
+    PGCMX：perm代的最大容量 (字节)   
+    PGC：perm代当前新生成的容量 (字节) 
+    S0：年轻代中第一个survivor（幸存区）已使用的占当前容量百分比 
+    S1：年轻代中第二个survivor（幸存区）已使用的占当前容量百分比 
+    E：年轻代中Eden（伊甸园）已使用的占当前容量百分比 
+    O：old代已使用的占当前容量百分比 
+    P：perm代已使用的占当前容量百分比 
+    S0CMX：年轻代中第一个survivor（幸存区）的最大容量 (字节) 
+    S1CMX ：年轻代中第二个survivor（幸存区）的最大容量 (字节) 
+    ECMX：年轻代中Eden（伊甸园）的最大容量 (字节) 
+    DSS：当前需要survivor（幸存区）的容量 (字节)（Eden区已满） 
+    TT： 持有次数限制 
+    MTT ： 最大持有次数限制
+
+--------------------------------------spring boot---------------------------------------
+https://start.aliyun.com/
+https://start.spring.io
+
+----------------------------------------kakfa-------------------------------------------
+## 启动
+### 启动内置 zookeeper
+bin/zookeeper-server-start.sh config/zookeeper.properties
+### 启动 kafka 服务
+bin/kafka-server-start.sh config/server.properties
+
+
+## 创建 topic
+bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:9092
+## 删除 topic
+bin/kafka-topics.sh --delete --topic quickstart-events --bootstrap-server localhost:9092
+## 查看 topic 的信息
+bin/kafka-topics.sh --describe --topic quickstart-events --bootstrap-server localhost:9092
+
+
+## 创建消息
+bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server localhost:9092
+## 读取消息
+bin/kafka-console-consumer.sh --topic quickstart-events --from-beginning --bootstrap-server localhost:9092
+
+-----------------------------------------------------------------------------------
+复制连接文件
+sudo cp -p -d 90-mhwd.conf ..
+
+Guava RateLimiter 接口限流
+令牌桶算法
+
