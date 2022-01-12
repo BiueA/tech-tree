@@ -131,7 +131,7 @@ if has("gui_running")
     "colorscheme evening
     "colorscheme desert
     "colorscheme blue
-    colorscheme darkblue
+    "colorscheme darkblue
 
     "" highlight the cursor line
     set cursorline
@@ -165,18 +165,23 @@ call plug#begin('~/.vim/plugged')
     Plug 'scrooloose/nerdtree' 
     "" color scheme
     Plug 'morhetz/gruvbox'
+    "" display-pane
+    "Plug 't9md/vim-choosewin'
+    
+    "" syntax check
+    Plug 'w0rp/ale'
     "" quoting/parenthesizing made simple
     Plug 'tpope/vim-surround'
     "" formate code
     Plug 'chiel92/vim-autoformat'
+    
+    "" autocomplete brackets, quotes
+    Plug 'chun-yang/auto-pairs'
     "" autocomplete 
     Plug 'davidhalter/jedi-vim'
-    "" syntax check
-    Plug 'w0rp/ale'
-    
+    "" complete code
     "Plug 'valloric/youcompleteme'
-    "" display-pane
-    "Plug 't9md/vim-choosewin'
+
 call plug#end()
 
 
@@ -187,27 +192,27 @@ call plug#end()
 
 "" 1.NERDTree 
 ""
-""   1.1 nerdtree key map
+""    1.1 nerdtree key map
 ""
 map ,n :NERDTreeToggle<CR>
 ""
-""   1.2 open nerdtree automatically when vim start up if no files where specified
+""    1.2 open nerdtree automatically when vim start up if no files where specified
 ""
 if has("gui_running")
     autocmd StdinReadPre * let s:std_in=1
     autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 endif
 ""
-""   1.3 open nerdtree automatically when vim start up on opening a directory
+""    1.3 open nerdtree automatically when vim start up on opening a directory
 ""
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 ""
-""   1.4 close vim if the only window left open is a NERDTree
+""    1.4 close vim if the only window left open is a NERDTree
 ""
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 ""
-""   1.5 change default arrows
+""    1.5 change default arrows
 ""
 "let g:NERDTreeDirArrowExpandable = '>' 
 "let g:NERDTreeDirArrowCollapsible = '-'
@@ -248,4 +253,8 @@ let g:formatter_yapf_style = 'pep8'
 ""
 let g:jedi#use_tabs_not_buffers = 1
 "let g:jedi#force_py_version = 3.7
+""
+""
+""   5.2 python path or venv path
+let g:jedi#environment_path = "venv"
 
