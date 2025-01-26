@@ -50,9 +50,31 @@ colorscheme default
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "" Quickly Run
-map <F5> :w<CR> :call CompileRunCode()<CR>
+"
+"map <F5> :w<CR> :call CompileRunCode()<CR>
+"func! CompileRunCode()
+"    "exec 'w'
+"    if &filetype == 'python'
+"        " exec '! python %'
+"        exec '!  C:/python/venv/Scripts/python %'
+"    elseif &filetype == 'c'
+"        exec '!clang % -o %:r'
+"        exec '! %:r'
+"    elseif &filetype == 'groovy'
+"        exec '!groovy %'
+"    endif
+"endfunc
+"
+
+map <F5> :call SaveCompileRunCode()<CR>
+map <S-F5> :call CompileRunCode()<CR>
+
+func! SaveCompileRunCode()
+    exec 'w'
+    exec CompileRunCode()
+endfunc
+
 func! CompileRunCode()
-    "exec 'w'
     if &filetype == 'python'
         " exec '! python %'
         exec '!  C:/python/venv/Scripts/python %'
